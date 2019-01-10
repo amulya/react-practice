@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 class Counter extends Component {
   state = {
-    count: 0,
+    count: this.props.value, // allows you to initialize count from Counters component
     tags: ["tag1", "tag2", "tag3"]
   };
 
@@ -10,6 +10,17 @@ class Counter extends Component {
     fontSize: 30,
     fontWeight: "bold"
   };
+
+  renderTags() {
+    if (this.state.tags.length === 0) return <p> There are no tags!</p>;
+    return (
+      <ul>
+        {this.state.tags.map(tag => (
+          <li key={tag}>{tag}</li>
+        ))}
+      </ul>
+    );
+  }
 
   render() {
     let classes = this.setClass();
@@ -24,16 +35,13 @@ class Counter extends Component {
         </button>
 
         <button
-          onClick={this.decrement.bind(this)}
-          className="btn btn-secondary btn-sm m-2"
+          onClick={() => this.props.onDelete(this.props.id)}
+          className="btn btn-danger btn-sm m-2"
         >
-          Decrement
+          Delete
         </button>
-        <ul>
-          {this.state.tags.map(tag => (
-            <li key={tag}>{tag}</li>
-          ))}
-        </ul>
+        {this.state.tags.length === 0 && "Please create a new tag!"}
+        {this.renderTags()}
       </React.Fragment>
     );
   }
@@ -44,7 +52,7 @@ class Counter extends Component {
 
   setClass() {
     let classes = "badge m-2 badge-";
-    classes += this.state.count === 0 ? "warning" : "primary";
+    classes += this.state.count <= 0 ? "warning" : "primary";
     return classes;
   }
 
